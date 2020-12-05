@@ -1,4 +1,4 @@
-package com.spring.templates.querydsl;
+package com.spring.templates.config;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.context.annotation.Bean;
@@ -8,7 +8,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 @Configuration
-public class QueryDslConfiguration {
+public class QueryDslConfig {
     @PersistenceContext
     private EntityManager entityManager;
 
