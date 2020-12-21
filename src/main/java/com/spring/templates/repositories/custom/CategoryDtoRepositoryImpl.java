@@ -74,16 +74,22 @@ public class CategoryDtoRepositoryImpl extends QueryDslRepository implements Cat
         QCategory category = QCategory.category;
         QRecipe recipe = QRecipe.recipe;
 
-        /*JPAQuery<Tuple> recipes = queryFactory.select(category.id, category.description, category.count().as("recipes"))
+        JPAQuery<Tuple> recipes0 = queryFactory.select(category.id, category.description, category.count().as("recipes"))
                 .from(category)
                 .join(category.recipes, recipe)
                 .on(category.recipes.contains(recipe))
-                .groupBy(category.id);*/
+                .groupBy(category.id);
 
         JPAQuery<Tuple> recipes = queryFactory.select(category.id, category.description, category.count().as("recipes"))
                 .from(category)
-                .where(category.recipes.any().in(queryFactory.selectFrom(recipe).fetch()))
+                .join(category.recipes, recipe)
                 .groupBy(category.id);
+
+        // valid sql, invalid results
+       /* JPAQuery<Tuple> recipes = queryFactory.select(category.id, category.description, category.count().as("recipes"))
+                .from(category)
+                .where(category.recipes.any().in(queryFactory.selectFrom(recipe).fetch()))
+                .groupBy(category.id);*/
         log.info("SQL = {}", recipes.toString());
         return recipes;
     }
