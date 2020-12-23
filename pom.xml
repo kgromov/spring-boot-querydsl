@@ -58,6 +58,18 @@
 		</dependency>
 
 		<dependency>
+			<groupId>com.querydsl</groupId>
+			<artifactId>querydsl-sql</artifactId>
+			<version>${querydsl.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.querydsl</groupId>
+			<artifactId>querydsl-sql-spring</artifactId>
+			<version>${querydsl.version}</version>
+		</dependency>
+
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
@@ -67,24 +79,47 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>com.mysema.maven</groupId>
-				<artifactId>apt-maven-plugin</artifactId>
-				<version>1.1.3</version>
+				<groupId>com.querydsl</groupId>
+				<artifactId>querydsl-maven-plugin</artifactId>
+				<version>${querydsl.version}</version>
 				<executions>
 					<execution>
 						<goals>
-							<goal>process</goal>
+							<goal>export</goal>
 						</goals>
-						<configuration>
-							<outputDirectory>target/generated-sources/java</outputDirectory>
-							<processor>com.querydsl.apt.jpa.JPAAnnotationProcessor</processor>
-						</configuration>
 					</execution>
 				</executions>
+				<configuration>
+					<jdbcDriver>com.mysql.cj.jdbc.Driver</jdbcDriver>
+					<jdbcUrl>jdbc:mysql://localhost:3306/spring_guru_recipe</jdbcUrl>
+					<jdbcUser>root</jdbcUser>
+					<jdbcPassword>admin</jdbcPassword>
+<!--					<schemaPattern>spring_guru_recipe</schemaPattern>-->
+					<packageName>com.myproject.domain</packageName>
+					<targetFolder>${project.basedir}/target/generated-sources/java</targetFolder>
+					<sourceFolder/>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>mysql</groupId>
+						<artifactId>mysql-connector-java</artifactId>
+						<version>${mysql.version}</version>
+					</dependency>
+				</dependencies>
+				<!--<configuration>
+					<jdbcDriver>org.h2.Driver</jdbcDriver>
+					<jdbcUrl>jdbc:h2:mem:testdb</jdbcUrl>
+					<packageName>com.myproject.domain</packageName>
+					<targetFolder>${project.basedir}/target/generated-sources/java</targetFolder>
+					<sourceFolder/>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>com.h2database</groupId>
+						<artifactId>h2</artifactId>
+						<version>${h2.version}</version>
+					</dependency>
+				</dependencies>-->
 			</plugin>
 		</plugins>
 	</build>
