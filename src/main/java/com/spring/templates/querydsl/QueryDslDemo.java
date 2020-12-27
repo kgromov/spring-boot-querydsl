@@ -7,6 +7,7 @@ import com.spring.templates.domain.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.Query;
@@ -19,6 +20,7 @@ public class QueryDslDemo {
     private JPAQueryFactory queryFactory;
 
     @PostConstruct
+    @Transactional
     public void init() {
         QRecipe recipe = QRecipe.recipe;
         QNotes notes = QNotes.notes;
@@ -44,4 +46,5 @@ public class QueryDslDemo {
                 .groupBy(notes.id);
         log.info("Sql query = {}", groupBy.toString());
     }
+
 }

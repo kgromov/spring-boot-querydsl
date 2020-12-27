@@ -1,7 +1,9 @@
 package com.spring.templates.querydsl;
 
+import com.spring.templates.domain.Recipe;
 import com.spring.templates.domain.dtos.CategoryRecipes;
 import com.spring.templates.repositories.custom.CategoryDtoRepository;
+import com.spring.templates.repositories.custom.HibernateQueryDslRepositoryImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,10 +16,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class QueryDslService {
     private final CategoryDtoRepository categoryDtoRepository;
+    private final HibernateQueryDslRepositoryImpl repository;
 
-//    @PostConstruct
+    @PostConstruct
     public void test() {
         log.info("############### Running QueryDSL ################");
+//        List<Recipe> allRecipes = repository.getAllRecipes();
 //        List<CategoryRecipes> allRecipesByCategory = categoryDtoRepository.getAllRecipesByCategory();
         CategoryRecipes recipes1 = categoryDtoRepository.getAllRecipesByCategoryRecordMapper().get(0);
         CategoryRecipes recipes2 = categoryDtoRepository.getAllRecipesByCategoryFetchTo().get(0);
