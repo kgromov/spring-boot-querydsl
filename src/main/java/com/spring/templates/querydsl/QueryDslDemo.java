@@ -10,16 +10,20 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.List;
 
 @Slf4j
 @Component
 public class QueryDslDemo {
+    @PersistenceContext
+    private EntityManager entityManager;
     @Autowired
     private JPAQueryFactory queryFactory;
 
-    @PostConstruct
+//    @PostConstruct
     @Transactional
     public void init() {
         QRecipe recipe = QRecipe.recipe;
@@ -44,6 +48,14 @@ public class QueryDslDemo {
                 .join(notes)
                 .on(recipe.notes.id.eq(notes.id))
                 .groupBy(notes.id);
+
+        // using JPAQuery  apart from  JPAQueryFactory
+        JPAQuery<Category> cs = new JPAQuery<Category>(entityManager)
+                .from(category)
+                .join(category.recipes, recipe)
+                .on(category.recipes.contains(recipe))
+                .groupBy(category.id);
+        List<Category> fetchedCategories = cs.fetch();
         log.info("Sql query = {}", groupBy.toString());
     }
 

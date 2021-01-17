@@ -2,11 +2,9 @@ package com.spring.templates.repositories.custom;
 
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
-import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.spring.templates.domain.QCategory;
 import com.spring.templates.domain.QRecipe;
-import com.spring.templates.domain.Recipe;
 import com.spring.templates.domain.dtos.CategoryRecipes;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -62,7 +60,8 @@ public class CategoryDtoRepositoryImpl extends QueryDslRepository implements Cat
         List<CategoryRecipes> recipes = queryFactory.select(Projections.constructor(CategoryRecipes.class,
                 category.id, category.description, category.count().as("recipes")))
                 .from(category)
-                .where(category.recipes.any().in(queryFactory.selectFrom(recipe).fetch()))
+                .join(category.recipes, recipe)
+                .on(category.recipes.contains(recipe))
                 .groupBy(category.id)
                 .fetch();
         stopWatch.stop();
@@ -73,12 +72,6 @@ public class CategoryDtoRepositoryImpl extends QueryDslRepository implements Cat
     private JPAQuery<Tuple> selectRecipesByCategory() {
         QCategory category = QCategory.category;
         QRecipe recipe = QRecipe.recipe;
-
-        JPAQuery<Tuple> recipes0 = queryFactory.select(category.id, category.description, category.count().as("recipes"))
-                .from(category)
-                .join(category.recipes, recipe)
-                .on(category.recipes.contains(recipe))
-                .groupBy(category.id);
 
         JPAQuery<Tuple> recipes = queryFactory.select(category.id, category.description, category.count().as("recipes"))
                 .from(category)
